@@ -12,7 +12,7 @@ export interface KanbanBoardProps<T extends ItemType, K> {
     columnData: columnDataType<T, K>[];
     renderItem: (props: T, isDragged?: boolean) => JSX.Element;
     renderHeader: (props: K) => JSX.Element;
-    renderFooter?: (props: KanbanBoardProps<T, K>) => React.ReactNode;
+    renderFooter?: (props: K) => JSX.Element;
     onDragEnd: (params: {
         fromColumnIndex: number;
         toColumnIndex: number;
