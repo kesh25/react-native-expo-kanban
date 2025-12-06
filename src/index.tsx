@@ -77,7 +77,7 @@ const ReactNativeKanbanBoard = <T extends ItemType, K>(
   useEffect(() => {
     setTimeout(() => {
       paginate("center");
-    }, 200);
+    }, 500);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.columnWidth]);
 
@@ -171,9 +171,11 @@ const ReactNativeKanbanBoard = <T extends ItemType, K>(
             extraData={isItemInFocusedColumn}
             initialNumToRender={i === 0 ? 8 : 3}
             showsVerticalScrollIndicator={false}
+            ListFooterComponent={
+              props.renderFooter && props.renderFooter(columnData.header)
+            }
           />
         </View>
-        {props.renderFooter && props.renderFooter(columnData.header)}
       </View>
     );
   };

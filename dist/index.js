@@ -50,7 +50,7 @@ const ReactNativeKanbanBoard = (props) => {
     useEffect(() => {
         setTimeout(() => {
             paginate("center");
-        }, 200);
+        }, 500);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.columnWidth]);
     const animatedStyle = useAnimatedStyle(() => {
@@ -98,9 +98,8 @@ const ReactNativeKanbanBoard = (props) => {
           {props.renderHeader(columnData.header)}
         </View>
         <View style={{ flex: 1 }}>
-          <FlatList scrollEnabled={itemsVerticalScrollEnabledRef.current} data={columnData.items} renderItem={renderCard} keyExtractor={(_, index) => `${i}-${index}`} extraData={isItemInFocusedColumn} initialNumToRender={i === 0 ? 8 : 3} showsVerticalScrollIndicator={false}/>
+          <FlatList scrollEnabled={itemsVerticalScrollEnabledRef.current} data={columnData.items} renderItem={renderCard} keyExtractor={(_, index) => `${i}-${index}`} extraData={isItemInFocusedColumn} initialNumToRender={i === 0 ? 8 : 3} showsVerticalScrollIndicator={false} ListFooterComponent={props.renderFooter && props.renderFooter(columnData.header)}/>
         </View>
-        {props.renderFooter && props.renderFooter(columnData.header)}
       </View>);
     };
     const onMomentumScrollEnd = (event) => {
