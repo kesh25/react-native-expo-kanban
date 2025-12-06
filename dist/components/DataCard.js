@@ -1,12 +1,19 @@
-import React, { createRef, useRef } from 'react';
-import { Pressable, View } from 'react-native';
-export const DataCard = React.memo(({ item, setDragCard, renderItem, itemColumnIndex, isDraggable, disableScroll, isBeingDragged }) => {
+import React, { createRef, useRef } from "react";
+import { Pressable, View } from "react-native";
+export const DataCard = React.memo(({ item, setDragCard, renderItem, itemColumnIndex, isDraggable, disableScroll, isBeingDragged, }) => {
     const positionRef = useRef(undefined);
     const onLongPress = () => {
         if (positionRef.current && isDraggable) {
             disableScroll();
             viewRef.current?.measureInWindow((x, y, width) => {
-                setDragCard({ props: item, width, x, y: y - 100, columnIndex: itemColumnIndex, id: item.id });
+                setDragCard({
+                    props: item,
+                    width,
+                    x,
+                    y: y - 100,
+                    columnIndex: itemColumnIndex,
+                    id: item.id,
+                });
             });
         }
     };
@@ -17,8 +24,6 @@ export const DataCard = React.memo(({ item, setDragCard, renderItem, itemColumnI
     };
     const viewRef = createRef();
     return (<Pressable delayLongPress={200} style={{ opacity: isBeingDragged ? 0 : 1, marginVertical: 2 }} onLongPress={onLongPress} onLayout={onLayout}>
-   <View ref={viewRef}>
-    {renderItem(item)}
-   </View>
-  </Pressable>);
+        <View ref={viewRef}>{renderItem(item)}</View>
+      </Pressable>);
 });

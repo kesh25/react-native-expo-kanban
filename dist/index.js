@@ -36,8 +36,13 @@ const ReactNativeKanbanBoard = (props) => {
         columnsHorizontalScrollRef,
         constants,
     });
+    const delayedPaginate = ((direction) => {
+        setTimeout(() => {
+            paginate(direction);
+        }, 100);
+    });
     const { pan, dragItem, dragX, dragY, setDragCard } = useDragGesture({
-        paginate,
+        paginate: delayedPaginate, // <-- pass the delayed version
         toColumnIndex,
         onDrop: enableScrollers,
         onDragEndSuccess: props.onDragEnd,
@@ -81,13 +86,18 @@ const ReactNativeKanbanBoard = (props) => {
                     margin: columnPadding,
                     padding: columnPadding,
                     width: columnContainerWidth - columnPadding * 2,
+                    // ensure height is dynamic
+                    flexShrink: 1,
+                    flexGrow: 0,
+                    alignSelf: "flex-start", // prevents stretching to same height as others
                 },
                 isPotentiallyBeingMoveTo ? props.columnContainerStyleOnDrag : {},
             ]}>
         <View style={props.columnHeaderStyle}>
           {props.renderHeader(columnData.header)}
         </View>
-        <FlatList scrollEnabled={itemsVerticalScrollEnabledRef.current} data={columnData.items} renderItem={renderCard} keyExtractor={(_, index) => `${i}-${index}`} extraData={isItemInFocusedColumn} initialNumToRender={i === 0 ? 8 : 3} showsVerticalScrollIndicator={false}/>
+        <FlatList scrollEnabled={itemsVerticalScrollEnabledRef.current} data={columnData.items} renderItem={renderCard} keyExtractor={(_, index) => `${i}-${index}`} extraData={isItemInFocusedColumn} initialNumToRender={i === 0 ? 8 : 3} showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 0, alignItems: "flex-start" }}/>
+        {props.renderFooter && props.renderFooter(props)}
       </View>);
     };
     const onMomentumScrollEnd = (event) => {

@@ -60,8 +60,15 @@ const ReactNativeKanbanBoard = <T extends ItemType, K>(
     columnsHorizontalScrollRef,
     constants,
   });
+
+  const delayedPaginate = ((direction: "left" | "right" | "center") => {
+    setTimeout(() => {
+      paginate(direction);
+    }, 100);
+  }) as typeof paginate;
+
   const { pan, dragItem, dragX, dragY, setDragCard } = useDragGesture({
-    paginate,
+    paginate: delayedPaginate, // <-- pass the delayed version
     toColumnIndex,
     onDrop: enableScrollers,
     onDragEndSuccess: props.onDragEnd,
@@ -142,6 +149,11 @@ const ReactNativeKanbanBoard = <T extends ItemType, K>(
             margin: columnPadding,
             padding: columnPadding,
             width: columnContainerWidth - columnPadding * 2,
+
+            // ensure height is dynamic
+            flexShrink: 1,
+            flexGrow: 0,
+            alignSelf: "flex-start", // prevents stretching to same height as others
           },
           isPotentiallyBeingMoveTo ? props.columnContainerStyleOnDrag : {},
         ]}
@@ -157,7 +169,9 @@ const ReactNativeKanbanBoard = <T extends ItemType, K>(
           extraData={isItemInFocusedColumn}
           initialNumToRender={i === 0 ? 8 : 3}
           showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ flexGrow: 0, alignItems: "flex-start" }}
         />
+        {props.renderFooter && props.renderFooter(props)}
       </View>
     );
   };
